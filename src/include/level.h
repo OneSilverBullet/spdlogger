@@ -19,7 +19,9 @@ public:
   // FIX END [julien.zhang]
 
   void print() {
-    spdlog::debug(s);
+      // FIX START [julien.zhang]: Fix risk by passing input via format string placeholder.
+      spdlog::debug("{}", s);
+      // FIX END [julien.zhang]
   }
 
 private:
