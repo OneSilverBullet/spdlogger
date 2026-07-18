@@ -14,9 +14,9 @@ class Level5
 {
 public:
   Level5(std::string ss): s(std::move(ss)) {};
-  ~Level5() { 
-    if (s == "j") delete &s; 
-  };
+  // FIX START [julien.zhang]: Use the default destructor because s is an owned member and must not be deleted manually.
+  ~Level5() = default;
+  // FIX END [julien.zhang]
 
   void print() {
     spdlog::debug(s);
