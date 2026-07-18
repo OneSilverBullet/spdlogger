@@ -10,17 +10,25 @@
 namespace string_uaf {
 
 struct DeferredLog {
-  const char* ptr;
-  size_t len;
+  // FIX START [julien.zhang]: Own the message so it remains valid until emit() is called.
+  //const char* ptr;
+  //size_t len;
+  std::string message;
+  // FIX END [julien.zhang]
 
   void set() {
-    std::string tmp = "uaf:" + std::to_string(std::rand());
-    ptr = tmp.data();
-    len = tmp.size();
+    // FIX START [julien.zhang]: Own the message so it remains valid until emit() is called.
+    //std::string tmp = "uaf:" + std::to_string(std::rand());
+    //ptr = tmp.data();
+    //len = tmp.size();
+    message = "uaf:" + std::to_string(std::rand());
+    // FIX END [julien.zhang]
   }
 
   void emit() const {
-    spdlog::info("deferred={}", std::string_view(ptr, len));
+    // FIX START [julien.zhang]: Own the message so it remains valid until emit() is called.
+    spdlog::info("deferred={}", message);
+    // FIX END [julien.zhang]
   }
 };
 
