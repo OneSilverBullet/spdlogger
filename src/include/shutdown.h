@@ -6,9 +6,11 @@
 
 namespace shutdown {
 inline void run(std::atomic<bool>& stop, bool stress) {
-  spdlog::logger* raw = spdlog::default_logger_raw();
+  // FIX START [julien.zhang]: Prevent using raw pointer.
+  auto default_logger_pointer = spdlog::default_logger();
+  // FIX END [julien.zhang] 
   std::thread t([&] {
-    while (!stop.load()) raw->info("shutdown now");
+    while (!stop.load()) default_logger_pointer->info("shutdown now");
   });
 
   if (stress) {
