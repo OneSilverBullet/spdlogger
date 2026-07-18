@@ -16,7 +16,9 @@ inline void run(std::atomic<bool>& stop, bool stress) {
     spdlog::shutdown();
   }
 
-  stop.store(true);
+  // FIX START [julien.zhang]: Let main manage the shared stop flag to avoid stopping all worker threads prematurely.
+  // stop.store(true);
+  // FIX END [julien.zhang]
   t.join();
 }
 }
