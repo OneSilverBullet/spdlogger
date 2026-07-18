@@ -42,7 +42,9 @@ int main(int argc, char** argv) {
       spdlog::async_overflow_policy::overrun_oldest);
 
   spdlog::set_default_logger(logger);
-  spdlog::set_level(spdlog::level::info);
+  // FIX START [julien.zhang]: Enable debug-level output without changing the severity of individual log messages.
+  spdlog::set_level(spdlog::level::debug);
+  // FIX END [julien.zhang]
 
   std::atomic<bool> stop{false};
   level::Level5 level5("level 5 logs");
