@@ -6,7 +6,9 @@
 #include <string>
 
 namespace level {
-inline int g_level = 0;
+// FIX START [julien.zhang]: Make g_level atomic to prevent data races between reader and writer threads.
+inline std::atomic<int> g_level{0};
+// FIX END [julien.zhang]
 
 class Level5
 {
@@ -26,11 +28,15 @@ private:
 
 inline void run(std::atomic<bool>& stop, bool) {
   std::thread w([&] {
-    while (!stop.load()) g_level++;
+    // FIX START [julien.zhang]: Make g_level atomic to prevent data races between reader and writer threads.
+    while (!stop.load()) g_level.fetch_add(1, std::memory_order_relaxed);
+    // FIX END [julien.zhang]
   });
   std::thread r([&] {
     while (!stop.load()) {
-      if (g_level & 1) spdlog::info("odd");
+      // FIX START [julien.zhang]: Make g_level atomic to prevent data races between reader and writer threads.
+      if (g_level.load(std::memory_order_relaxed) & 1) spdlog::info("odd");
+      // FIX END [julien.zhang]
       else spdlog::debug("even");
     }
   });
